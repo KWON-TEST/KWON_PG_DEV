@@ -15,6 +15,7 @@ artifacts:
     - ./appspec.yml
     - build/libs/*.war
   discard-paths: yes
+  
 cache:
   paths:
     - '/root/.gradle/caches/**/*'
