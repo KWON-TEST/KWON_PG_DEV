@@ -8,12 +8,12 @@ phases:
       - ./gradlew build
   post_build:
     commands:
-      - echo $(basename ./build/libs/*.jar)
+      - echo $(basename ./build/libs/*.war)
       - pwd
 artifacts:
   files:
     - ./appspec.yml
-    - build/libs/*.jar
+    - build/libs/*.war
   discard-paths: yes
 cache:
   paths:
