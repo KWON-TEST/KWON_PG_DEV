@@ -3,9 +3,9 @@
 REPOSITORY=/home/ec2-user/build/
 cd $REPOSITORY
 
-APP_NAME=action_codedeploy
-JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep '.war' | tail -n 1)
-JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
+APP_NAME=KWON_PG_DEV-0.0.1-SNAPSHOT
+JAR_NAME=$(ls $REPOSITORY | grep '.war' | tail -n 1)
+JAR_PATH=$REPOSITORY/$JAR_NAME
 
 CURRENT_PID=$(pgrep -f $APP_NAME)
 
