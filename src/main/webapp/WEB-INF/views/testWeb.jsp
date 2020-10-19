@@ -17,9 +17,12 @@
     <script type="text/javascript">
 		//카드결제
 	    function cardPay() {
-	    	alert("111111");
-	    	var formData = $(orderForm).serialize();
+	    	var form = document.orderForm;
+	    	
+	    	alert(form.mid.value);
+	    	var formData = form.serialize();
 	    	alert(formData);
+	    	
 	    	 $.ajax({
 	             cache : false,
 	             url : "${pageContext.request.contextPath}/cardPay", // 요기에
@@ -40,7 +43,7 @@
 
 <h3 class="text-center">신규PG 테스트 페이지</h3>
 
-	<form id="orderForm" name="orderForm" >
+	<form id="orderForm" name="orderForm" method="post" >
 		<br>
 		<div class="form-group">
 			<h4 class="text-center">결제 파라미터</h4>
