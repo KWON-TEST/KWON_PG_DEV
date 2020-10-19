@@ -51,102 +51,104 @@
 			<h4 class="text-center">결제 파라미터</h4>
 		</div>
 
-		<tr>
-			<td>가맹점 아이디</td>
-			<td>
-				<input type="text" name="mid" id="mid" value="mid_test">
-			</td>
-		</tr>
+		<table border="0">
+			<tr>
+				<td>가맹점 아이디</td>
+				<td>
+					<input type="text" name="mid" id="mid" value="mid_test">
+				</td>
+			</tr>
+		
+			<tr>
+				<td>VAN</td>
+				<td>
+					<select class="form-control" id="van">
+						<option value="KSNET" data-val="KSNET">KSNET</option>
+						<option value="NICE" data-val="NICE">NICE</option>
+						<option value="KCP" data-val="KCP">KCP</option>
+						<option value="JTNET" data-val="JTNET">JTNET</option>
+					</select>
+				</td>
+			</tr>
 	
-		<tr>
-			<td>VAN</td>
-			<td>
-				<select class="form-control" id="van">
-					<option value="KSNET" data-val="KSNET">KSNET</option>
-					<option value="NICE" data-val="NICE">NICE</option>
-					<option value="KCP" data-val="KCP">KCP</option>
-					<option value="JTNET" data-val="JTNET">JTNET</option>
-				</select>
-			</td>
-		</tr>
-
-		<tr>
-			<td>가맹점 주문번호</td>
-			<td>
-				<input type="text" name="orderNo" id="orderNo" value="">
-			</td>
-		</tr>
+			<tr>
+				<td>가맹점 주문번호</td>
+				<td>
+					<input type="text" name="orderNo" id="orderNo" value="">
+				</td>
+			</tr>
+			
+			<tr>
+				<td>결제금액</td>
+				<td>
+					<input type="text" name="amt" id="amt" value="1004">
+				</td>
+			</tr>
+			
+			<tr>
+				<td>부가세</td>
+				<td>
+					<input type="text" name="tax" id="tax" value="0">
+				</td>
+			</tr>
+			
+			<tr>
+				<td>봉사료</td>
+				<td>
+					<input type="text" name="serviceFee" id="serviceFee" value="0">
+				</td>
+			</tr>
+			
+			<tr>
+				<td>주문자명</td>
+				<td>
+					<input type="text" name="ordNm" id="ordNm" value="홍길동">
+				</td>
+			</tr>
 		
-		<tr>
-			<td>결제금액</td>
-			<td>
-				<input type="text" name="amt" id="amt" value="1004">
-			</td>
-		</tr>
-		
-		<tr>
-			<td>부가세</td>
-			<td>
-				<input type="text" name="tax" id="tax" value="0">
-			</td>
-		</tr>
-		
-		<tr>
-			<td>봉사료</td>
-			<td>
-				<input type="text" name="serviceFee" id="serviceFee" value="0">
-			</td>
-		</tr>
-		
-		<tr>
-			<td>주문자명</td>
-			<td>
-				<input type="text" name="ordNm" id="ordNm" value="홍길동">
-			</td>
-		</tr>
+			<tr>
+				<td>구매상품정보</td>
+				<td>
+					<input type="text" name="prdtNm" id="prdtNm" value="테스트상품">
+				</td>
+			</tr>
 	
-		<tr>
-			<td>구매상품정보</td>
-			<td>
-				<input type="text" name="prdtNm" id="prdtNm" value="테스트상품">
-			</td>
-		</tr>
-
-		<tr>
-			<td>NOTI URL</td>
-			<td>
-				<input type="text" name="notiUrl" id="notiUrl" value="http://www.mtouch.com/">
-			</td>
-		</tr>
-
-		<tr>
-			<td>NEXT URL</td>
-			<td>
-				<input type="text" name="nextUrl" id="nextUrl" value="http://www.mtouch.com/">
-			</td>
-		</tr>
-
-		<tr>
-			<td>주문자 전화번호</td>
-			<td>
-				<input type="text" name="payerTel" id="payerTel" value="010-1234-1234">
-			</td>
-		</tr>
-
-		<tr>
-			<td>주문자 휴대폰번호</td>
-			<td>
-				<input type="text" name="payerTel" id="payerMobileNo" value="010-1234-1234">
-			</td>
-		</tr>
-		
-		<tr>
-			<td>주문자 이메일</td>
-			<td>
-				<input type="text" name="email" id="email" value="dev@dev.com">
-			</td>
-		</tr>
-
+			<tr>
+				<td>NOTI URL</td>
+				<td>
+					<input type="text" name="notiUrl" id="notiUrl" value="http://www.mtouch.com/">
+				</td>
+			</tr>
+	
+			<tr>
+				<td>NEXT URL</td>
+				<td>
+					<input type="text" name="nextUrl" id="nextUrl" value="http://www.mtouch.com/">
+				</td>
+			</tr>
+	
+			<tr>
+				<td>주문자 전화번호</td>
+				<td>
+					<input type="text" name="payerTel" id="payerTel" value="010-1234-1234">
+				</td>
+			</tr>
+	
+			<tr>
+				<td>주문자 휴대폰번호</td>
+				<td>
+					<input type="text" name="payerTel" id="payerMobileNo" value="010-1234-1234">
+				</td>
+			</tr>
+			
+			<tr>
+				<td>주문자 이메일</td>
+				<td>
+					<input type="text" name="email" id="email" value="dev@dev.com">
+				</td>
+			</tr>
+		</table>
+		<br>
 		<div class="form-group" style="text-align:center;">
 			<div class="col-sm-offset-1 col-sm-10" id="btnPay">
 				<button type="button" id="btnPay" onclick="cardPay()">카드결제</button>
