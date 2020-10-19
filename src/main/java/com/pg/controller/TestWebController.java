@@ -17,12 +17,12 @@ public class TestWebController {
 	PaymentDao paymentService;
 	
 	@RequestMapping(value="/testWeb") 
-	public ModelAndView testWeb(OrderInfoModel oderInfo) throws Exception{
+	public ModelAndView testWeb() throws Exception{
 		ModelAndView mv = new ModelAndView();
 		
 		//OrderInfoModel check = paymentService.selectCheck();
 		
-		log.info("amt:" + oderInfo.getAmt());
+		log.info("testWeb");
 		
 		mv.addObject("status", "OK"); 
 		

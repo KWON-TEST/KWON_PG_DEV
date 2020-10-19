@@ -5,7 +5,7 @@
 	Date nowTime = new Date();
 	SimpleDateFormat sf = new SimpleDateFormat("yyMMddhhmmss");
 
-	orderNo = sf.format(nowTime);
+	var orderNo = "KWON_" + sf.format(nowTime);
 %>
 <!DOCTYPE html>
 <html lang="en">
