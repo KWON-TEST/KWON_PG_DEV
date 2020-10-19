@@ -1,14 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%
-	Date nowTime = new Date();
-	SimpleDateFormat sf = new SimpleDateFormat("yyMMddhhmmss");
-
-	String orderNumber = "KWON_" + sf.format(nowTime);
-	
-	document.order_form.POid.value =
-%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
