@@ -6,6 +6,8 @@
 	SimpleDateFormat sf = new SimpleDateFormat("yyMMddhhmmss");
 
 	String orderNumber = "KWON_" + sf.format(nowTime);
+	
+	document.order_form.POid.value =
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,34 +15,42 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	
     <title>신규PG 테스트 페이지</title>
+    
+    <script src="//code.jquery.com/jquery.js"></script>
 
     <script type="text/javascript">
 		//카드결제
 	    function cardPay() {
-	    	var form = document.orderForm;
+	    	var order_form = document.orderForm;
 	    	
-	    	alert(form.mid.value);
-	    	var formData = form.serialize();
-	    	alert(formData);
-	    	
-	    	 $.ajax({
-	             cache : false,
-	             url : "${pageContext.request.contextPath}/cardPay", // 요기에
-	             type : 'POST', 
-	             data : formData, 
-	             success : function(data) {
-	                 var jsonObj = JSON.parse(data);
-	             }, // success 
-	     
-	             error : function(xhr, status) {
-	                 alert(xhr + " : " + status);
-	             }
-	         }); // $.ajax */
+	    	order_form.action = "${pageContext.request.contextPath}/cardPay";
+	    	order_form.submit();
 		}
+	    
+	    function on_load()
+	    {
+	    	curr_date = new Date();
+	    	year = curr_date.getYear();
+	    	month = curr_date.getMonth()+1;
+	    	day = curr_date.getDate();
+	    	hours = curr_date.getHours();
+	    	mins = curr_date.getMinutes();
+	    	secs = curr_date.getSeconds();
+	    	
+	    	if(month < 10){
+	    		month = "0" + month;
+	    	}
+	    	
+	    	if(day < 10){
+	    		day = "0"+day;
+	    	}
+
+	    	document.orderForm.orderNo.value = "KWONPG_" + year.toString() + month.toString() + day.toString() + hours.toString() + mins.toString() + secs.toString(); 
+	    }
     </script>
 </head>
-<body>
 
+<body onload="on_load()">
 <h3 class="text-center">신규PG 테스트 페이지</h3>
 
 	<form id="orderForm" name="orderForm" method="post" >
@@ -71,7 +81,7 @@
 		<div class="form-group">
 			<label for="orderNo" class="col-sm-2 control-label">가맹점 주문번호</label>
 			<div class="col-sm-10">
-				<input type="text" name="orderNo" id="orderNo" value="${orderNumber}" class="form-control">
+				<input type="text" name="orderNo" id="orderNo" value="" class="form-control">
 			</div>
 		</div>
 		
