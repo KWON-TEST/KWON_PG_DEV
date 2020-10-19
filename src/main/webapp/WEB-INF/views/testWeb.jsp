@@ -22,17 +22,24 @@
 
 <h3 class="text-center">신규PG 테스트 페이지</h3>
 
-	<form name="form1" class="form-horizontal" style="width:50%;">
+	<form name="orderForm" class="form-horizontal" style="width:50%;">
 		<br>
 		<div class="form-group">
 			<h4 class="text-center">결제 파라미터</h4>
 		</div>
 
 		<div class="form-group">
+			<label for="mid" class="col-sm-2 control-label">가맹점 아이디</label>
+			<div class="col-sm-10">
+				<input type="text" name="mid" id="mid" value="" class="form-control">
+			</div>
+		</div>
+	
+		<div class="form-group">
 			<label for="van" class="col-sm-2 control-label">VAN</label>
 			<div class="col-sm-10">
 				<select class="form-control" id="van">
-					<option value="KSNET" data-val=""KSNET"">"KSNET"</option>
+					<option value="KSNET" data-val="KSNET">KSNET</option>
 					<option value="NICE" data-val="NICE">NICE</option>
 					<option value="KCP" data-val="KCP">KCP</option>
 					<option value="JTNET" data-val="JTNET">JTNET</option>
@@ -41,28 +48,49 @@
 		</div>
 
 		<div class="form-group">
-			<label for="trackId" class="col-sm-2 control-label">가맹점 주문번호</label>
+			<label for="orderNo" class="col-sm-2 control-label">가맹점 주문번호</label>
 			<div class="col-sm-10">
-				<input type="text" name="orderNo" id="orderNo" value=orderNo class="form-control">
+				<input type="text" name="orderNo" id="orderNo" value=${orderNo} class="form-control">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="amount" class="col-sm-2 control-label">결제금액</label>
+			<label for="amt" class="col-sm-2 control-label">결제금액</label>
 			<div class="col-sm-10">
-				<input type="text" name="amt" id="amt" value="1004" class="form-control" placeholder="amount">
+				<input type="text" name="amt" id="amt" value="1004" class="form-control">
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="tax" class="col-sm-2 control-label">부가세</label>
+			<div class="col-sm-10">
+				<input type="text" name="tax" id="tax" value="0" class="form-control">
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="serviceFee" class="col-sm-2 control-label">봉사료</label>
+			<div class="col-sm-10">
+				<input type="text" name="serviceFee" id="serviceFee" value="0" class="form-control">
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="ordNm" class="col-sm-2 control-label">주문자명</label>
+			<div class="col-sm-10">
+				<input type="text" name="ordNm" id="ordNm" value="홍길동" class="form-control">
+			</div>
+		</div>
+	
+		<div class="form-group">
+			<label for="prdtNm" class="col-sm-2 control-label">구매상품정보</label>
+			<div class="col-sm-10">
+				<input type="text" name="prdtNm" id="prdtNm" value="테스트상품" class="form-control">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="product" class="col-sm-2 control-label">구매상품정보</label>
-			<div class="col-sm-10">
-				<textarea class="form-control" id="product" style="width:100%;">{"name": "T-Shirts","price": "900","qty": 1,"desc": "description"}</textarea>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="webhook" class="col-sm-2 control-label">NOTI URL</label>
+			<label for="notiUrl" class="col-sm-2 control-label">NOTI URL</label>
 			<div class="col-sm-10">
 				<input type="text" name="notiUrl" id="notiUrl" value="http://www.mtouch.com/" class="form-control">
 			</div>
@@ -74,32 +102,25 @@
 				<input type="text" name="nextUrl" id="nextUrl" value="http://www.mtouch.com/" class="form-control">
 			</div>
 		</div>
-		
-		<div class="form-group">
-			<label for="payerName" class="col-sm-2 control-label">구매자 이름</label>
-			<div class="col-sm-10">
-				<input type="text" name="payerName" id="payerName" value="구매자" class="form-control">
-			</div>
-		</div>
 
 		<div class="form-group">
-			<label for="payerTel" class="col-sm-2 control-label">구매자 전화번호</label>
+			<label for="payerTel" class="col-sm-2 control-label">주문자 전화번호</label>
 			<div class="col-sm-10">
 				<input type="text" name="payerTel" id="payerTel" value="010-1234-1234" class="form-control">
 			</div>
 		</div>
 
 			<div class="form-group">
-			<label for="payerTel" class="col-sm-2 control-label">구매자 휴대폰번호</label>
+			<label for="payerTel" class="col-sm-2 control-label">주문자 휴대폰번호</label>
 			<div class="col-sm-10">
 				<input type="text" name="payerTel" id="payerMobileNo" value="010-1234-1234" class="form-control">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="payerEmail" class="col-sm-2 control-label">구매자 이메일</label>
+			<label for="email" class="col-sm-2 control-label">주문자 이메일</label>
 			<div class="col-sm-10">
-				<input type="text" name="payerEmail" id="payerEmail" value="dev@dev.com" class="form-control">
+				<input type="text" name="email" id="email" value="dev@dev.com" class="form-control">
 			</div>
 		</div>
 
@@ -111,10 +132,24 @@
 	</form>
 
     <script>
-	//카드결제
-    function javascript:cardPay() {
-		
-	}
+		//카드결제
+	    function cardPay() {
+	    	var formData = $(orderForm).serialize();
+	    	
+	    	 $.ajax({
+	             cache : false,
+	             url : "${pageContext.request.contextPath}/cardPay", // 요기에
+	             type : 'POST', 
+	             data : formData, 
+	             success : function(data) {
+	                 var jsonObj = JSON.parse(data);
+	             }, // success 
+	     
+	             error : function(xhr, status) {
+	                 alert(xhr + " : " + status);
+	             }
+	         }); // $.ajax */
+		}
 	</script>
 </body>
 </html>

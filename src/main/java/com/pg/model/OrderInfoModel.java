@@ -22,4 +22,7 @@ public class OrderInfoModel {
 	private String serviceFee;
 	private String instMon;
 	private String apprNo;
+	private String van;
+	private String notiUrl;
+	private String nextUrl;
 }
