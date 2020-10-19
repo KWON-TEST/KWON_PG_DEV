@@ -5,23 +5,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.pg.service.CheckService;
+import com.pg.dao.PaymentDao;
+import com.pg.model.OrderInfoModel;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-public class CheckController {
+public class TestWebController {
 	@Autowired 
-	CheckService checkService;
+	PaymentDao paymentService;
 	
-	@RequestMapping(value="/check") 
-	public ModelAndView check() throws Exception{
+	@RequestMapping(value="/testWeb") 
+	public ModelAndView testWeb(OrderInfoModel oderInfo) throws Exception{
 		ModelAndView mv = new ModelAndView();
 		
-		String check = checkService.check();
+		//OrderInfoModel check = paymentService.selectCheck();
 		
-		log.info("check1:" + check);
+		log.info("amt:" + oderInfo.getAmt());
 		
 		mv.addObject("status", "OK"); 
 		

@@ -113,9 +113,7 @@
     <script>
 	//카드결제
     function javascript:cardPay() {
-		var products = [];
-		var product = $('#product').val().replace(/\n/gi, "");
-		products.push(JSON.parse(product));
+		
 	}
 	</script>
 </body>
