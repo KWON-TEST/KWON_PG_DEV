@@ -5,7 +5,7 @@
 	Date nowTime = new Date();
 	SimpleDateFormat sf = new SimpleDateFormat("yyMMddhhmmss");
 
-	String orderNo = "KWON_" + sf.format(nowTime);
+	String orderNumber = "KWON_" + sf.format(nowTime);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,9 +14,27 @@
 	
     <title>신규PG 테스트 페이지</title>
 
-	<style>
-		form { margin: 0 auto; width:250px; }
-	</style>
+    <script type="text/javascript">
+		//카드결제
+	    function cardPay() {
+	    	alert("111111");
+	    	var formData = $(orderForm).serialize();
+	    	alert(formData);
+	    	 $.ajax({
+	             cache : false,
+	             url : "${pageContext.request.contextPath}/cardPay", // 요기에
+	             type : 'POST', 
+	             data : formData, 
+	             success : function(data) {
+	                 var jsonObj = JSON.parse(data);
+	             }, // success 
+	     
+	             error : function(xhr, status) {
+	                 alert(xhr + " : " + status);
+	             }
+	         }); // $.ajax */
+		}
+    </script>
 </head>
 <body>
 
@@ -31,7 +49,7 @@
 		<div class="form-group">
 			<label for="mid" class="col-sm-2 control-label">가맹점 아이디</label>
 			<div class="col-sm-10">
-				<input type="text" name="mid" id="mid" value="" class="form-control">
+				<input type="text" name="mid" id="mid" value="mid_test" class="form-control">
 			</div>
 		</div>
 	
@@ -50,7 +68,7 @@
 		<div class="form-group">
 			<label for="orderNo" class="col-sm-2 control-label">가맹점 주문번호</label>
 			<div class="col-sm-10">
-				<input type="text" name="orderNo" id="orderNo" value=${orderNo} class="form-control">
+				<input type="text" name="orderNo" id="orderNo" value="${orderNumber}" class="form-control">
 			</div>
 		</div>
 		
@@ -126,30 +144,9 @@
 
 		<div class="form-group" style="text-align:center;">
 			<div class="col-sm-offset-1 col-sm-10" id="btnPay">
-				<button type="button" class="btn btn-default" id='cardPayBtn' onclick="cardPay()">카드결제</button>
+				<input type="button" id="btnPay" onclick="cardPay()">카드결제</button>
 			</div>
 	  	</div>
 	</form>
-
-    <script>
-		//카드결제
-	    function cardPay() {
-	    	var formData = $(orderForm).serialize();
-	    	
-	    	 $.ajax({
-	             cache : false,
-	             url : "${pageContext.request.contextPath}/cardPay", // 요기에
-	             type : 'POST', 
-	             data : formData, 
-	             success : function(data) {
-	                 var jsonObj = JSON.parse(data);
-	             }, // success 
-	     
-	             error : function(xhr, status) {
-	                 alert(xhr + " : " + status);
-	             }
-	         }); // $.ajax */
-		}
-	</script>
 </body>
 </html>
