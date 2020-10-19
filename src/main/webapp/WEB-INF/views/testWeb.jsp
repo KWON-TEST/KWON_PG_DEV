@@ -126,7 +126,7 @@
 
 		<div class="form-group" style="text-align:center;">
 			<div class="col-sm-offset-1 col-sm-10" id="btnPay">
-				<button type="button" class="btn btn-default" id='cardPayBtn' onclick="javascript:cardPay();">카드결제</button>
+				<button type="button" class="btn btn-default" id='cardPayBtn' onclick="cardPay()">카드결제</button>
 			</div>
 	  	</div>
 	</form>
