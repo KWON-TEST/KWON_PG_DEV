@@ -40,7 +40,7 @@
 
 <h3 class="text-center">신규PG 테스트 페이지</h3>
 
-	<form name="orderForm" class="form-horizontal" style="width:50%;">
+	<form id="orderForm" name="orderForm" >
 		<br>
 		<div class="form-group">
 			<h4 class="text-center">결제 파라미터</h4>
@@ -144,7 +144,7 @@
 
 		<div class="form-group" style="text-align:center;">
 			<div class="col-sm-offset-1 col-sm-10" id="btnPay">
-				<input type="button" id="btnPay" onclick="cardPay()">카드결제</button>
+				<button type="button" id="btnPay" onclick="cardPay()">카드결제</button>
 			</div>
 	  	</div>
 	</form>
