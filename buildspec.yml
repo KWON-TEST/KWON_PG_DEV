@@ -9,7 +9,7 @@ phases:
   post_build:
     commands:
       - echo Kwon Pg build Compl...
-      - echo $(basename)
+      - echo $basename
       - echo $(basename ./build/libs/*.war)
       - pwd
 artifacts:
