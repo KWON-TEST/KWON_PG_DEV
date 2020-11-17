@@ -19,9 +19,7 @@ public class TestWebController {
 	@RequestMapping(value="/testWeb") 
 	public ModelAndView testWeb() throws Exception{
 		ModelAndView mv = new ModelAndView();
-		
-		//OrderInfoModel check = paymentService.selectCheck();
-		
+
 		log.info("testWeb");
 		
 		mv.addObject("status", "OK"); 

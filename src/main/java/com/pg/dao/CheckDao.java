@@ -8,5 +8,5 @@ import com.pg.model.TestModel;
 @Repository
 @Mapper 
 public interface CheckDao { 
-	TestModel selectCheck(); 
+	public String check(); 
 }

@@ -11,12 +11,23 @@
     <script src="//code.jquery.com/jquery.js"></script>
 
     <script type="text/javascript">
+	    var width = 350;
+	    var height = 475;
+	    var xpos = (screen.width - width) / 2;
+	    var ypos = (screen.width - height) / 6;
+	    var position = "top=" + ypos + ",left=" + xpos;
+	    var features = position + ", width="+width+", height="+height+",toolbar=no, location=no"; 
+	    
 		//카드결제
 	    function cardPay() {
 	    	var order_form = document.orderForm;
-	    	
-	    	order_form.action = "${pageContext.request.contextPath}/cardPay";
-	    	order_form.submit();
+	    	window.name = "KWONPG_CLIENT";
+	    	wallet = window.open("", "KWONPG_WALLET", position + ", width="+720+", height="+630+",toolbar=no, location=no");
+
+	    	order_form.target = "KWONPG_WALLET";
+	        order_form.action = "${pageContext.request.contextPath}/cardPay";
+
+	    	order_form.submit();        
 		}
 	    
 	    function on_load()
@@ -37,7 +48,7 @@
 	    		day = "0"+day;
 	    	}
 
-	    	document.orderForm.orderNo.value = "KWONPG_" + year.toString() + month.toString() + day.toString() + hours.toString() + mins.toString() + secs.toString(); 
+	    	document.orderForm.ordNo.value = "KWONPG_" + year.toString() + month.toString() + day.toString() + hours.toString() + mins.toString() + secs.toString(); 
 	    }
     </script>
 </head>
@@ -58,7 +69,14 @@
 					<input type="text" name="mid" id="mid" value="mid_test">
 				</td>
 			</tr>
-		
+			
+			<tr>
+				<td>한글 가맹점명</td>
+				<td>
+					<input type="text" name="midNm" id="midNm" value="테스트 가맹점">
+				</td>
+			</tr>
+			
 			<tr>
 				<td>VAN</td>
 				<td>
@@ -74,7 +92,7 @@
 			<tr>
 				<td>가맹점 주문번호</td>
 				<td>
-					<input type="text" name="orderNo" id="orderNo" value="">
+					<input type="text" name="ordNo" id="ordNo" value="">
 				</td>
 			</tr>
 			
@@ -86,9 +104,23 @@
 			</tr>
 			
 			<tr>
-				<td>부가세</td>
+				<td>과세</td>
 				<td>
 					<input type="text" name="tax" id="tax" value="0">
+				</td>
+			</tr>
+			
+			<tr>
+				<td>부가세</td>
+				<td>
+					<input type="text" name="vat" id="vat" value="0">
+				</td>
+			</tr>
+			
+			<tr>
+				<td>비과세</td>
+				<td>
+					<input type="text" name="taxFree" id="taxFree" value="0">
 				</td>
 			</tr>
 			
@@ -126,18 +158,25 @@
 					<input type="text" name="nextUrl" id="nextUrl" value="http://www.mtouch.com/">
 				</td>
 			</tr>
-	
+			
+			<tr>
+				<td>CANC URL</td>
+				<td>
+					<input type="text" name="cancUrl" id="cancUrl" value="${pageContext.request.contextPath}/resReturn">
+				</td>
+			</tr>
+			
 			<tr>
 				<td>주문자 전화번호</td>
 				<td>
-					<input type="text" name="payerTel" id="payerTel" value="010-1234-1234">
+					<input type="text" name="telNo" id="telNo" value="010-1234-1234">
 				</td>
 			</tr>
 	
 			<tr>
 				<td>주문자 휴대폰번호</td>
 				<td>
-					<input type="text" name="payerTel" id="payerMobileNo" value="010-1234-1234">
+					<input type="text" name="mobileNo" id="mobileNo" value="010-1234-1234">
 				</td>
 			</tr>
 			
