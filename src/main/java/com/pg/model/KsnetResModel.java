@@ -57,5 +57,5 @@ public class KsnetResModel {
 	/** 가맹점사용필드 */
 	private String mchtFiller	= "";
 	/** 여유필드 */
-	private String bodyFiller 		= "";
+	private String bodyFiller 	= "";
 }

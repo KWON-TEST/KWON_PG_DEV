@@ -26,4 +26,9 @@ public class TestWebController {
 		
 		return mv;
 	}
+	
+	@RequestMapping(value="/cardCancel") 
+	public void cardCancel(OrderInfoModel orderInfo) throws Exception{
+		log.info("cardCancel");
+	}
 }

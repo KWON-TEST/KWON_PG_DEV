@@ -12,7 +12,7 @@ public class KsnetReqModel {
 	/** 전문버전 0412 */
 	private String specVersion 		= "0412";
 	/** 단말기번호 */
-	private String terminalNo		= "DPT0TEST03";
+	private String terminalNo		= "";
 	/** 취급기관코드 */
 	private String agencyCd			= "";
 	/** 전문일련번호 */
@@ -53,9 +53,9 @@ public class KsnetReqModel {
 	/** 거래일자 */
 	private String tranDt		 	= "";
 	/** Working Key Index */	
-	private String workIdx 	 	 	= "AA";
+	private String workIdx 	 	 	= "";
 	/** 비밀번호 */
-	private String passwd		 	= "0000000000000000";
+	private String passwd		 	= "";
 	/** 상품코드 */
 	private String prdtCd 		 	= "";
 	/** 주민번호또는사업자번호 */

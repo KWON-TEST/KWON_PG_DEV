@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.ksnet.interfaces.Approval;
 import com.pg.dao.PaymentDao;
-import com.pg.model.CardIspModel;
 import com.pg.model.KsnetReqModel;
 import com.pg.model.KsnetResModel;
 import com.pg.model.OrderInfoModel;
@@ -37,8 +36,13 @@ public class VanService {
 		SimpleDateFormat dayTime = new SimpleDateFormat("yyyyMMddHHmmss");
 		String strDatetime = dayTime.format(new Date(time));
 		
+		//테스트
 		serverIp = "210.181.28.116";
 		serverPort = 47131;
+		
+		//운영
+		//serverIp = "210.181.28.137";
+		//serverPort = 7131;
 		
 		String recvData = "";
 		
@@ -48,13 +52,19 @@ public class VanService {
         	
             log.info("KSNET SendData >>> [{}]", sendData);
             
-            byte[] requestData = sendData.getBytes("UTF-8");
+            byte[] requestData = sendData.getBytes();
+            
+            // 길이 계산하는 Logic
+    		byte[] requestTelegram = new byte[requestData.length + 4];
+    		String telegramLength = String.format("%04d", requestData.length);
+    		System.arraycopy(telegramLength.getBytes(), 0, requestTelegram, 0, 4);
+    		System.arraycopy(requestData, 0, requestTelegram, 4, requestData.length);
             
     		//KSNET에 결제요청
     		int rtn = approval.requestPG(serverIp, serverPort, requestData, responseData, 15 * 1000, 0);
     		
-    		recvData = new String(responseData, 0, responseData.length);
-    		
+    		recvData = new String(responseData, 0, responseData.length, "euc-kr");
+
     		log.info("KSNET rtn : [{}]", Integer.toString(rtn));
     		log.info("KSNET ResponseData : [{}]", recvData);
 
@@ -76,56 +86,74 @@ public class VanService {
 	 * @param orderInfoModel
 	 * @param cardIspModel
 	 */
-	public KsnetReqModel reqDataSetting(OrderInfoModel orderInfo, CardIspModel cardIspModel) {
+	public KsnetReqModel reqDataSetting(OrderInfoModel orderInfo) {
 		KsnetReqModel reqInfo = new KsnetReqModel();
 		
-		reqInfo.setCryptoYn("0");
-		//reqInfo.setTerminalNo("");
+		reqInfo.setCryptoYn("2");
+		reqInfo.setSpecVersion("0412");
+		reqInfo.setTerminalNo("DPT0TEST07");
 		reqInfo.setAgencyCd("");
-		reqInfo.setSpecSeq("");
+		reqInfo.setSpecSeq(""); //망취소시 필요 유니크번호
+		reqInfo.setTimeout("15");
 		reqInfo.setManagerNm("KWON");
 		reqInfo.setCompanyTel(orderInfo.getTelNo());
 		reqInfo.setMobileNo(orderInfo.getMobileNo());
 		reqInfo.setFiller("");
 		
-		reqInfo.setSpecType("1120");
+		if("C".equals(orderInfo.getCardType())) {
+			//취소
+			reqInfo.setSpecType("1210");
+			reqInfo.setApprNo(orderInfo.getOrgApprNo());
+			reqInfo.setTranDt(orderInfo.getOrgTrDt());
+		}else {
+			//결제
+			reqInfo.setSpecType("1130");
+		}
+		
 		reqInfo.setTrxType("K");
-		reqInfo.setCardNo("5236120099298029=2503");
+		reqInfo.setCardNo(orderInfo.getCardNo() +  "=" + orderInfo.getExpYear() + orderInfo.getExpMonth());
 		reqInfo.setInstMon(orderInfo.getInstMon());
 		reqInfo.setAmt(orderInfo.getAmt());
 		reqInfo.setServiceFee(orderInfo.getServiceFee());
 		reqInfo.setTax(orderInfo.getTax());
-		reqInfo.setApprNo(orderInfo.getApprNo());
-		reqInfo.setTranDt(orderInfo.getTrDt());
-		reqInfo.setWorkIdx("AA");
-		reqInfo.setPasswd(orderInfo.getPass());
+		
+		if("S".equals(orderInfo.getCardType())) {
+			//수기결제 시 값세팅
+			reqInfo.setWorkIdx("AA");
+			reqInfo.setPasswd(orderInfo.getPass());
+		}
+		
 		reqInfo.setPrdtCd(orderInfo.getPrdtCd());
 		reqInfo.setBuyerAuthNum(orderInfo.getBuyerAuthNum());
 		reqInfo.setSecurityLevel("");
 		reqInfo.setDomain("");
 		reqInfo.setServerIp("");
 		reqInfo.setCompanyCd("");
-		reqInfo.setCardSendType("");
+		reqInfo.setCardSendType("1");
 		reqInfo.setMchtId("");
 		reqInfo.setFiller("");
 		reqInfo.setEtc1("");
 		reqInfo.setEtc2("");
-		reqInfo.setCertType(orderInfo.getCardType());
-		reqInfo.setCertCavvYn("");
 		
 		String certData = "";
 		
 		if("I".equals(orderInfo.getCardType())) {
 			//ISP거래
-			certData = cardIspModel.getKVP_SESSIONKEY().length() + cardIspModel.getKVP_SESSIONKEY() + 
-					   cardIspModel.getKVP_ENCDATA().length() + cardIspModel.getKVP_ENCDATA() + "080226";
+			reqInfo.setCertType(orderInfo.getCardType());
+			reqInfo.setCertMpiLoc("");
+			reqInfo.setCertCavvYn("");
+			
+			certData = orderInfo.getP_KVP_SESSIONKEY().length() + orderInfo.getP_KVP_SESSIONKEY() + 
+					orderInfo.getP_KVP_ENCDATA().length() + orderInfo.getP_KVP_ENCDATA() + "080226" + 
+					"             " + "                    ";
 		}else if("M".equals(orderInfo.getCardType())) {
 			//MPI거래
-			certData = "";
-			
-			//MPI : CAVV(Ascii 40Byte) + X-ID(Ascii 40Byte) + EC-I(Ascii 2Byte)+이용자IP(20)
-			
+			reqInfo.setCertType(orderInfo.getCardType());
 			reqInfo.setCertMpiLoc("");
+			reqInfo.setCertCavvYn("");
+
+			certData = orderInfo.getP_CAVV() + orderInfo.getP_XID() + orderInfo.getP_ECI();
+
 		}
 		reqInfo.setCertData(certData);
 		
@@ -146,7 +174,7 @@ public class VanService {
 		transaction.append(common.getLPad(reqModel.getSpecVersion(),4, "0"));
 		transaction.append(common.getRPad(reqModel.getTerminalNo(),10, " "));
 		transaction.append(common.getRPad(reqModel.getAgencyCd(),5, " "));
-		transaction.append(common.getRPad(reqModel.getSpecSeq(),12, " "));
+		transaction.append(common.getLPad(reqModel.getSpecSeq(),12, "0"));
 		transaction.append(common.getLPad(reqModel.getTimeout(),2, "0"));
 		transaction.append(common.getRPad(reqModel.getManagerNm(),20, " "));
 		transaction.append(common.getRPad(reqModel.getCompanyTel(),13, " "));
@@ -176,13 +204,13 @@ public class VanService {
 		transaction.append(common.getLPad(reqModel.getCardSendType(),1, "0"));
 		transaction.append(common.getRPad(reqModel.getMchtId(),2, " "));
 		transaction.append(common.getRPad(reqModel.getFiller(),30, " "));
-		transaction.append(common.getLPad(reqModel.getCheckNo(),8, "0"));
-		transaction.append(common.getLPad(reqModel.getCheckBankCd(),2, "0"));
-		transaction.append(common.getLPad(reqModel.getCheckBranchCd(),4, "0"));
-		transaction.append(common.getLPad(reqModel.getCheckType(),2, "0"));
-		transaction.append(common.getLPad(reqModel.getCheckAmt(),12, "0"));
-		transaction.append(common.getLPad(reqModel.getCheckConfirmDt(),6, "0"));
-		transaction.append(common.getLPad(reqModel.getAccntSeq(),6, "0"));
+		transaction.append(common.getRPad(reqModel.getCheckNo(),8, " "));
+		transaction.append(common.getRPad(reqModel.getCheckBankCd(),2, " "));
+		transaction.append(common.getRPad(reqModel.getCheckBranchCd(),4, " "));
+		transaction.append(common.getRPad(reqModel.getCheckType(),2, " "));
+		transaction.append(common.getRPad(reqModel.getCheckAmt(),12, " "));
+		transaction.append(common.getRPad(reqModel.getCheckConfirmDt(),6, " "));
+		transaction.append(common.getRPad(reqModel.getAccntSeq(),6, " "));
 		transaction.append(common.getRPad(reqModel.getEtc1(),3, " "));
 		transaction.append(common.getRPad(reqModel.getEtc2(),27, " "));
 		transaction.append(common.getRPad(reqModel.getCertType(),1, " "));
@@ -202,32 +230,32 @@ public class VanService {
 		CommonService common = new CommonService();
 		KsnetResModel resInfo = new KsnetResModel();
 		
-		resInfo.setSpecType(common.getString(recvData,127,4));
-		resInfo.setVanTr(common.getString(recvData,131,12));
-		resInfo.setStatus(common.getString(recvData,143,1));
-		resInfo.setTranDt(common.getString(recvData,144,12));
-		resInfo.setCardNo(common.getString(recvData,156,20));
-		resInfo.setExpirDt(common.getString(recvData,176,4));
-		resInfo.setInstMon(common.getString(recvData,180,2));
-		resInfo.setAmt(common.getString(recvData,182,12));
-		resInfo.setMsg1(common.getString(recvData,194,16));
-		resInfo.setMsg2(common.getString(recvData,210,16));
-		resInfo.setMsg3(common.getString(recvData,226,16));
-		resInfo.setMsg4(common.getString(recvData,242,16));
-		resInfo.setApprNo(common.getString(recvData,258,12));
-		resInfo.setCardNm(common.getString(recvData,270,16));
-		resInfo.setIssuerCd(common.getString(recvData,286,2));
-		resInfo.setAcquirerCd(common.getString(recvData,288,2));
-		resInfo.setMchtNo(common.getString(recvData,290,15));
-		resInfo.setSnedType(common.getString(recvData,305,2));
-		resInfo.setNotice(common.getString(recvData,307,20));
-		resInfo.setOccurPoint(common.getString(recvData,327,12));
-		resInfo.setAvailPoint(common.getString(recvData,339,12));
-		resInfo.setSavePoint(common.getString(recvData,351,12));
-		resInfo.setPointMsg(common.getString(recvData,363,40));
-		resInfo.setMchtId(common.getString(recvData,403,2));
-		resInfo.setMchtFiller(common.getString(recvData,405,30));
-		resInfo.setBodyFiller(common.getString(recvData,433,30));
+		resInfo.setSpecType(common.getString(recvData,123,4));
+		resInfo.setVanTr(common.getString(recvData,127,12));
+		resInfo.setStatus(common.getString(recvData,139,1));
+		resInfo.setTranDt(common.getString(recvData,140,12));
+		resInfo.setCardNo(common.getString(recvData,152,20));
+		resInfo.setExpirDt(common.getString(recvData,172,4));
+		resInfo.setInstMon(common.getString(recvData,176,2));
+		resInfo.setAmt(common.getString(recvData,178,12));
+		resInfo.setMsg1(common.getString(recvData,190,16));
+		resInfo.setMsg2(common.getString(recvData,206,16));
+		resInfo.setMsg3(common.getString(recvData,222,16));
+		resInfo.setMsg4(common.getString(recvData,238,16));
+		resInfo.setApprNo(common.getString(recvData,254,12));
+		resInfo.setCardNm(common.getString(recvData,266,16));
+		resInfo.setIssuerCd(common.getString(recvData,282,2));
+		resInfo.setAcquirerCd(common.getString(recvData,284,2));
+		resInfo.setMchtNo(common.getString(recvData,286,15));
+		resInfo.setSnedType(common.getString(recvData,301,2));
+		resInfo.setNotice(common.getString(recvData,303,20));
+		resInfo.setOccurPoint(common.getString(recvData,323,12));
+		resInfo.setAvailPoint(common.getString(recvData,335,12));
+		resInfo.setSavePoint(common.getString(recvData,347,12));
+		resInfo.setPointMsg(common.getString(recvData,359,40));
+		resInfo.setMchtId(common.getString(recvData,399,2));
+		resInfo.setMchtFiller(common.getString(recvData,401,30));
+		resInfo.setBodyFiller(common.getString(recvData,431,30));
 		
 		log.info("RecvData Parsing Success");
 		

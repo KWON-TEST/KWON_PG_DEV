@@ -30,7 +30,7 @@
 	    		}
 	    	});
 
-	    	window.parent.$("#settlePayLayer").remove();
+	    	window.parent.$("#kwonPayLayer").remove();
 	    	parent.frameResize("100%", "100%");
 	    	
 	    	doACPAY2_Cancel();
@@ -39,38 +39,32 @@
 	    });
 
 		function VP_Ret_Pay(ret) {
+			$("#pay_info_form").append($("#return_form").html());
+			$("#return_form").remove();
+			
+			$("#P_KVP_CARD_CODE").val($("#KVP_CARDCODE").val().substring(2,6));
+			$("#P_KVP_NOINT").val($("#KVP_NOINT").val());
+			$("#P_KVP_QUOTA").val($("#KVP_QUOTA").val());
+			$("#P_VP_RET_SAVEPOINT").val($("#VP_RET_SAVEPOINT").val());
+			$("#P_KVP_CARD_PREFIX").val($("#KVP_CARD_PREFIX").val());
+			$("#P_KVP_CONAME").val(encodeURL($("#KVP_CONAME").val()));
+			$("#P_KVP_SESSIONKEY").val(encodeURL($("#KVP_SESSIONKEY").val()));
+			$("#P_KVP_ENCDATA").val(encodeURL($("#KVP_ENCDATA").val()));
+			$("#P_KVP_PAYSET_FLAG").val($("#KVP_PAYSET_FLAG").val());
+			$("#P_KVP_USING_POINT").val($("#KVP_USING_POINT").val());
+			$("#P_KVP_RESERVED1").val($("#KVP_RESERVED1").val());
+			$("#P_KVP_RESERVED2").val($("#KVP_RESERVED2").val());
+			$("#P_KVP_RESERVED3").val($("#KVP_RESERVED3").val());
+			$("#P_VP_CANCEL_CODE").val($("#VP_CANCEL_CODE").val());
+			
 			if(ret){
 				// 인증정상
-				$("#pay_info_form").append($("#return_form").html());
-				$("#return_form").remove();
-				
-				$("#P_KVP_CARD_CODE").val($("#KVP_CARDCODE").val().substring(2,6));
-				$("#P_KVP_NOINT").val($("#KVP_NOINT").val());
-				$("#P_KVP_QUOTA").val($("#KVP_QUOTA").val());
-				$("#P_VP_RET_SAVEPOINT").val($("#VP_RET_SAVEPOINT").val());
-				$("#P_KVP_CARD_PREFIX").val($("#KVP_CARD_PREFIX").val());
-				$("#P_KVP_CONAME").val(encodeURL($("#KVP_CONAME").val()));
-				$("#P_KVP_SESSIONKEY").val(encodeURL($("#KVP_SESSIONKEY").val()));
-				$("#P_KVP_ENCDATA").val(encodeURL($("#KVP_ENCDATA").val()));
-				$("#P_KVP_PAYSET_FLAG").val($("#KVP_PAYSET_FLAG").val());
-				$("#P_KVP_USING_POINT").val($("#KVP_USING_POINT").val());
-				$("#P_KVP_RESERVED1").val($("#KVP_RESERVED1").val());
-				$("#P_KVP_RESERVED2").val($("#KVP_RESERVED2").val());
-				$("#P_KVP_RESERVED3").val($("#KVP_RESERVED3").val());
-				$("#P_VP_CANCEL_CODE").val($("#VP_CANCEL_CODE").val());
-
-				$("#payMethod").val("pay_submit");
 				$("#pay_info_form").attr("target", "_parent");
+				$("#pay_info_form").attr("action", "${pageContext.request.contextPath}/ispPayProc");
 				$("#pay_info_form").submit();
-				parent.openLayer();
 			}else{
-				$("#payMethod").val("pay_submit");
-				$("#pay_info_form").attr("target", "_parent");
-				$("#pay_info_form").attr("action", "${pageContext.request.contextPath}/paySubmit");
-				$("#pay_info_form").submit();
-				parent.openLayer();
-				//인증실패 창닫기
-				//onACPAYCancel();
+				//인증실패
+				parent.closeLayer();
 			}
 		}
 		
@@ -260,7 +254,7 @@
 		<input type="hidden" name="ordNm" id="ordNm" value="${orderInfo.ordNm}">
 		<input type="hidden" name="buyerId" id="buyerId" value="${orderInfo.buyerId}">
 		<input type="hidden" name="buyerIp" id="buyerIp" value="${orderInfo.buyerIp}">
-		<input type="hidden" name="buyerEmail" id="buyerEmail" value="${orderInfo.buyerEmail}">
+		<input type="hidden" name="email" id="email" value="${orderInfo.email}">
 		<input type="hidden" name="trDt" id="trDt" value="${orderInfo.trDt}">
 		<input type="hidden" name="stateCd" id="stateCd" value="${orderInfo.stateCd}">
 		<input type="hidden" name="cardNo" id="cardNo" value="${orderInfo.cardNo}">

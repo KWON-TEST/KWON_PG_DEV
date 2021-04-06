@@ -111,6 +111,14 @@ public class CommonService{
      * @return  
      */
     public String getLPad(String str, int size, String strFillText) {
+    	if(str == null) {
+    		if(" ".equals(strFillText)) {
+    			str = "";
+    		}else if("0".equals(strFillText)) {
+    			str = "0";
+    		}
+    	}
+    	
         for(int i = (str.getBytes()).length; i < size; i++) {
             str = strFillText + str;
         }
@@ -127,6 +135,14 @@ public class CommonService{
      * @return  
      */
     public String getRPad(String str, int size, String strFillText) {
+    	if(str == null) {
+    		if(" ".equals(strFillText)) {
+    			str = "";
+    		}else if("0".equals(strFillText)) {
+    			str = "0";
+    		}
+    	}
+    	
         for(int i = (str.getBytes()).length; i < size; i++) {
             str += strFillText;
         }
@@ -134,9 +150,13 @@ public class CommonService{
     }
     
     public String getString(String str, int sPoint, int length) throws Exception{
-        String EncodingLang = "UTF-8";
+    	if(str == null) {
+    		str = "";
+    	}
+    	
+        String EncodingLang = "EUC-KR";
         
-        byte[] bytes = str.getBytes("UTF-8");
+        byte[] bytes = str.getBytes("EUC-KR");
 
         byte[] value = new byte[length];
 

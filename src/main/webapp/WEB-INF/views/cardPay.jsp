@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title>KWON 테스트 결제서비스</title>
+    <title>KWON 테스트 카드 결제서비스</title>
     
     <script src="//code.jquery.com/jquery.js"></script>
 	<script type="text/javascript" src="https://www.vpay.co.kr/eISP/jquery-1.8.3.min.js"></script>
@@ -49,7 +49,7 @@
 	    	
 	    	$("#orderForm").append($("#return_form").html());
 	    	$("#return_form").remove();
-	    	
+
 	    	//카드사 선택
 		    $(".cardInfo").click(function(){
 				interestList($(this).val(),$(this).attr("alt"));
@@ -106,8 +106,8 @@
 				fName = createFrame();
 				
 				openLayer();
-				
-				$("#settlePayLayer").show();
+
+				$("#kwonPayLayer").show();
 				$("#_method").val("cardAuth");
 				$("#orderForm").attr("target", fName);
 				$("#orderForm").attr("action", "${pageContext.request.contextPath}/cardAuth");
@@ -141,7 +141,7 @@
 	    function interestList(code, aquCode){
 	    	if($("#instMon").prop("type") == "select-one"){
 	    		$("#instMon").empty();
-	    		$("#instMon").append($("<option></option>").attr("value", "0").text("일시불"));
+	    		$("#instMon").append($("<option></option>").attr("value", "00").text("일시불"));
 
 	    		var installment = [{"cardCode":"1005","installmentInfo":"2:3:4:5"},{"cardCode":"1015","installmentInfo":"2:3:4:5:6:7:8"},{"cardCode":"1009","installmentInfo":"2:3:4:5:6:7"},{"cardCode":"1008","installmentInfo":"2:3:4:5:6"},{"cardCode":"1004","installmentInfo":"2:3:4"},{"cardCode":"1003","installmentInfo":"2:3"},{"cardCode":"1002","installmentInfo":"2:3:4:5"},{"cardCode":"1001","installmentInfo":"2:3:4:5:6:7:8:9:10:11:12"},{"cardCode":"2001","installmentInfo":"2:3:4:5:6:7:8:9"}];
 	    		
@@ -172,12 +172,12 @@
 	    }
 	    
 	    function createFrame(){
-	    	var frameNm = "SETTLE_PAY_" + Math.floor(Math.random() * 100000);
-	    	var settleFrame = document.createElement("iframe");
-	    	settleFrame.id = frameNm;
-	    	settleFrame.name = frameNm;
-	    	settleFrame.scrolling = "no";
-	    	$(document.body).append(settleFrame);
+	    	var frameNm = "KWON_PAY_" + Math.floor(Math.random() * 100000);
+	    	var kwonFrame = document.createElement("iframe");
+	    	kwonFrame.id = frameNm;
+	    	kwonFrame.name = frameNm;
+	    	kwonFrame.scrolling = "no";
+	    	$(document.body).append(kwonFrame);
 	    	$("#"+frameNm).css("width", "0");
 	    	$("#"+frameNm).css("height", "0");
 	    	$("#"+frameNm).css("z-index","9");
@@ -189,20 +189,20 @@
 	    }
 	    
 	    function openLayer(){
-	    	var settleLay = document.createElement("div");
-	    	settleLay.id = "settlePayLayer";
-	    	if($("#settlePayLayer")){
-	    		$("#settlePayLayer").remove();
+	    	var kwonLay = document.createElement("div");
+	    	kwonLay.id = "kwonPayLayer";
+	    	if($("#kwonPayLayer")){
+	    		$("#kwonPayLayer").remove();
 	    	}
-	    	$(document.body).append(settleLay);
-	    	$("#settlePayLayer").css("background-color", "#000");
-	    	$("#settlePayLayer").css("opacity", "0.6");
-	    	$("#settlePayLayer").css("z-index","8");
-	    	$("#settlePayLayer").css("position", "absolute");
-	    	$("#settlePayLayer").css("top", 0);
-	    	$("#settlePayLayer").css("left", 0);
-	    	$("#settlePayLayer").css("width", "100%");
-	    	$("#settlePayLayer").css("height", "100%");
+	    	$(document.body).append(kwonLay);
+	    	$("#kwonPayLayer").css("background-color", "#000");
+	    	$("#kwonPayLayer").css("opacity", "0.6");
+	    	$("#kwonPayLayer").css("z-index","8");
+	    	$("#kwonPayLayer").css("position", "absolute");
+	    	$("#kwonPayLayer").css("top", 0);
+	    	$("#kwonPayLayer").css("left", 0);
+	    	$("#kwonPayLayer").css("width", "100%");
+	    	$("#kwonPayLayer").css("height", "100%");
 	    }
 	    
 	    function closeLayer(){
@@ -219,8 +219,8 @@
 	    	var clientWidth = $(window).width()/2;
 	    	var clientHeight = $(window).height()/2;
 	    	
-	    	$("#settlePayLayer").css("width", "100%");
-	    	$("#settlePayLayer").css("height", "100%");
+	    	$("#kwonPayLayer").css("width", "100%");
+	    	$("#kwonPayLayer").css("height", "100%");
 	    	$("#" + fName).css("left", Number(clientWidth) - Number($("#" + fName).width()/2));
 	    	
 	    	if(Number($("#" + fName).height()) < 630){
@@ -255,15 +255,12 @@
 		<input type="hidden" name="ordNm" id="ordNm" value="${orderInfo.ordNm}">
 		<input type="hidden" name="buyerId" id="buyerId" value="${orderInfo.buyerId}">
 		<input type="hidden" name="buyerIp" id="buyerIp" value="${orderInfo.buyerIp}">
-		<input type="hidden" name="buyerEmail" id="buyerEmail" value="${orderInfo.buyerEmail}">
 		<input type="hidden" name="trDt" id="trDt" value="${orderInfo.trDt}">
 		<input type="hidden" name="stateCd" id="stateCd" value="${orderInfo.stateCd}">
-		<input type="hidden" name="cardNo" id="cardNo" value="${orderInfo.cardNo}">
-		<input type="hidden" name="cardYm" id="cardYm" value="${orderInfo.cardYm}">
 		<input type="hidden" name="amt" id="amt" value="${orderInfo.amt}">
 		<input type="hidden" name="tax" id="tax" value="${orderInfo.tax}">
+		<input type="hidden" name="vat" id="vat" value="${orderInfo.vat}">
 		<input type="hidden" name="serviceFee" id="serviceFee" value="${orderInfo.serviceFee}">
-		<input type="hidden" name="instMon" id="instMon" value="${orderInfo.instMon}">
 		<input type="hidden" name="apprNo" id="apprNo" value="${orderInfo.apprNo}">
 		<input type="hidden" name="van" id="van" value="${orderInfo.van}">
 		<input type="hidden" name="notiUrl" id="notiUrl" value="${orderInfo.notiUrl}">
@@ -393,7 +390,7 @@
 		            </div>
 		            <div class="it_input">
 		              <div class="set"> <span class="label">이메일</span>
-		                <input type="text" style="width:300px;" name="email" id="email" value="" placeholder="입력 시 결제내역 통보 메일이 발송됩니다." />
+		                <input type="text" style="width:300px;" name="email" id="email" value=${orderInfo.email} placeholder="입력 시 결제내역 통보 메일이 발송됩니다." />
 		              </div>
 		            </div>
 		          </div>

@@ -29,6 +29,17 @@
 
 	    	order_form.submit();        
 		}
+		
+	    function cardSugiPay() {
+	    	var order_form = document.orderForm;
+	    	window.name = "KWONPG_CLIENT";
+	    	wallet = window.open("", "KWONPG_WALLET", position + ", width="+720+", height="+630+",toolbar=no, location=no");
+
+	    	order_form.target = "KWONPG_WALLET";
+	        order_form.action = "${pageContext.request.contextPath}/cardSugiPay";
+
+	    	order_form.submit();        
+		}
 	    
 	    function on_load()
 	    {
@@ -80,7 +91,7 @@
 			<tr>
 				<td>VAN</td>
 				<td>
-					<select class="form-control" id="van">
+					<select class="form-control" name="van" id="van">
 						<option value="KSNET" data-val="KSNET">KSNET</option>
 						<option value="NICE" data-val="NICE">NICE</option>
 						<option value="KCP" data-val="KCP">KCP</option>
@@ -162,7 +173,7 @@
 			<tr>
 				<td>CANC URL</td>
 				<td>
-					<input type="text" name="cancUrl" id="cancUrl" value="${pageContext.request.contextPath}/resReturn">
+					<input type="text" name="cancUrl" id="cancUrl" value="${pageContext.request.contextPath}/result">
 				</td>
 			</tr>
 			
@@ -190,6 +201,7 @@
 		<br>
 		<div class="form-group" style="text-align:center;">
 			<div class="col-sm-offset-1 col-sm-10" id="btnPay">
+				<button type="button" id="btnSugiPay" onclick="cardSugiPay()">수기결제</button> 
 				<button type="button" id="btnPay" onclick="cardPay()">카드결제</button>
 			</div>
 	  	</div>

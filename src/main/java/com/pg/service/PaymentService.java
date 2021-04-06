@@ -166,28 +166,51 @@ public class PaymentService {
 	}
 	
 	/**
-	 * 카드결제 처리 프로세스
-	 * @param cardIspModel
+	 * 카드결제,취소 처리 프로세스
 	 * @param orderInfo
 	 * @return
 	 * @throws Exception
 	 */
-	public KsnetResModel cardPaymentProc(CardIspModel cardIspModel, OrderInfoModel orderInfo) throws Exception {
+	public KsnetResModel cardPaymentProc(OrderInfoModel orderInfo) throws Exception {
 		VanService van = new VanService();
 		KsnetReqModel reqInfo = new KsnetReqModel();
 		KsnetResModel resInfo = new KsnetResModel();
 		
 		String sendData = "";
+
+		reqInfo = van.reqDataSetting(orderInfo);
 		
-		orderInfo.setCardType("I");
-		
-		reqInfo = van.reqDataSetting(orderInfo, cardIspModel);
-		
-		sendData = van.getReqBody(reqInfo);
-		
+		sendData = van.getReqBody(reqInfo) + reqInfo.getCertData();
+
 		resInfo = van.vanProc(sendData);
 		
-		updateTrans(resInfo);
+		//원장 업데이트 처리
+		//updateTrans(resInfo);
+		
+		return resInfo;
+	}
+	
+	/**
+	 * 카드결제 취소 처리 프로세스
+	 * @param orderInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public KsnetResModel cardCancelPaymentProc(OrderInfoModel orderInfo) throws Exception {
+		VanService van = new VanService();
+		KsnetReqModel reqInfo = new KsnetReqModel();
+		KsnetResModel resInfo = new KsnetResModel();
+		
+		String sendData = "";
+
+		reqInfo = van.reqDataSetting(orderInfo);
+		
+		sendData = van.getReqBody(reqInfo) + reqInfo.getCertData();
+
+		resInfo = van.vanProc(sendData);
+		
+		//원장 업데이트 처리
+		//updateTrans(resInfo);
 		
 		return resInfo;
 	}

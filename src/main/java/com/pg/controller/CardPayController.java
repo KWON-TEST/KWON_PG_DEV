@@ -51,8 +51,39 @@ public class CardPayController {
 		return mv;
 	}
 	
+	@RequestMapping(value="/cardSugiPay") 
+	public ModelAndView cardSugiPay(OrderInfoModel orderInfo) throws Exception{
+		ModelAndView mv = new ModelAndView();
+		
+		log.info("cardSugiPay in orderInfo : " + orderInfo.toString());
+		
+		//거래번호 생성
+		String transNo = paymentService.makeTransNo("CARD");
+		orderInfo.setTrNo(transNo);
+		orderInfo.setStateCd("0051");
+		
+		log.info("cardSugiPay makeTransNo : " + orderInfo.getOrdNo() + ":" + transNo);
+		
+		HashMap<String, String> checkRes = paymentService.paramCheck(orderInfo);
+		
+		//가맹점 정보 체크 추가
+		//주문정보 저장 추가
+		
+		if(!"0000".contentEquals(checkRes.get("code"))) {
+			orderInfo.setStateCd("0031");
+		}
+		orderInfo.setResCode(checkRes.get("code"));
+		orderInfo.setResMsg(checkRes.get("message"));
+		
+		log.info("cardSugiPay out orderInfo : " + orderInfo.toString());
+		
+		mv.addObject("orderInfo", orderInfo); 
+		
+		return mv;
+	}
+	
 	@RequestMapping(value="/cardAuth") 
-	public ModelAndView cardISP(OrderInfoModel orderInfo) throws Exception{
+	public ModelAndView cardAuth(OrderInfoModel orderInfo) throws Exception{
 		ModelAndView mv = new ModelAndView();
 		
 		log.info("cardISP in orderInfo : " + orderInfo.toString());
@@ -61,44 +92,79 @@ public class CardPayController {
 		if("1001".equals(orderInfo.getCardGb()) || "1002".equals(orderInfo.getCardGb()) || "1007".equals(orderInfo.getCardGb()) ||
 		   "1017".equals(orderInfo.getCardGb()) || "1018".equals(orderInfo.getCardGb()) || "1012".equals(orderInfo.getCardGb())){
 			//ISP결제
+			mv = new ModelAndView("cardISP");
+
 			CardIspModel cardIspReqModel = new CardIspModel();
 			
 			paymentService.IspCardCodeConvert(orderInfo, cardIspReqModel);
 			
 			paymentService.makeIspData(orderInfo, cardIspReqModel);
 			
-			mv.addObject("cardIspReqModel", cardIspReqModel);
-			
-			//cardIsp.jsp로 가도록 처리
 			log.info("cardISP in cardIspReqModel : " + cardIspReqModel.toString());
+			log.info("cardISP out orderInfo : " + orderInfo.toString());
+			
+			mv.addObject("cardIspReqModel", cardIspReqModel);
 		}else {
 			//MPI결제
 			//cardMpi.jsp로 가도록 처리
+			orderInfo.setCardType("M");
 		}
 		mv.addObject("orderInfo", orderInfo); 
 		 
-		log.info("cardISP out orderInfo : " + orderInfo.toString());
+		return mv;
+	}
+	
+	@RequestMapping(value="/sugiPayProc") 
+	public ModelAndView sugiPayProc(OrderInfoModel orderInfo) throws Exception{
+		ModelAndView mv = new ModelAndView();
+		PaymentService payment = new PaymentService();
+		KsnetResModel resInfo = new KsnetResModel();
+		
+		orderInfo.setCardType("S");
+		
+		log.info("sugiPaySubmit orderInfo : " + orderInfo.toString());
+		
+		//VAN사 결제요청
+		resInfo = payment.cardPaymentProc(orderInfo);
+
+		if("O".equals(resInfo.getStatus())) {
+			//결제성공
+			orderInfo.setStateCd("0021");
+			orderInfo.setResCode("0021");
+			orderInfo.setResMsg(resInfo.getMsg2());
+		}else {
+			//결제실패
+			orderInfo.setStateCd("0031");
+			orderInfo.setResCode("0031");
+			orderInfo.setResMsg(resInfo.getMsg2());
+		}
+		mv.setViewName("result");
+		
+		mv.addObject("orderInfo", orderInfo); 
+		mv.addObject("resInfo", resInfo); 
 		
 		return mv;
 	}
 	
-	@RequestMapping(value="/authSubmit") 
-	public ModelAndView authSubmit(CardIspModel cardIspModel) throws Exception{
+	@RequestMapping(value="/ispPayProc") 
+	public ModelAndView ispPayProc(OrderInfoModel orderInfo) throws Exception{
 		ModelAndView mv = new ModelAndView();
 		PaymentService payment = new PaymentService();
-		OrderInfoModel orderInfo = new OrderInfoModel();
 		KsnetResModel resInfo = new KsnetResModel();
 		
-		log.info("authSubmit cardIspInfo : " + cardIspModel.toString());
+		/*
+		 * log.info("authSubmit cardIspInfo : " + cardIspModel.toString());
+		 * 
+		 * String trNo = cardIspModel.getTRANS_NO();
+		 * 
+		 * //거래번호로 주문정보 조회추가 orderInfo = payment.getOrderInfo(trNo);
+		 */
+		orderInfo.setCardType("I");
 		
-		String trNo = cardIspModel.getTRANS_NO();
+		log.info("ispProc orderInfo : " + orderInfo.toString());
 		
-		//거래번호로 주문정보 조회추가
-		orderInfo = payment.getOrderInfo(trNo);
-		
-		log.info("authSubmit orderInfo : " + orderInfo.toString());
-		
-		resInfo = payment.cardPaymentProc(cardIspModel, orderInfo);
+		//VAN사 결제요청
+		resInfo = payment.cardPaymentProc(orderInfo);
 
 		if("O".equals(resInfo.getStatus())) {
 			//결제성공
@@ -112,11 +178,46 @@ public class CardPayController {
 		return mv;
 	}
 	
-	@RequestMapping(value="/resReturn") 
-	public ModelAndView resReturn(OrderInfoModel orderInfo) throws Exception{
+	@RequestMapping(value="/cardCancelProc") 
+	public ModelAndView cardCancelProc(OrderInfoModel orderInfo) throws Exception{
+		ModelAndView mv = new ModelAndView();
+		PaymentService payment = new PaymentService();
+		KsnetResModel resInfo = new KsnetResModel();
+		
+		//취소요청 정보 체크(금액,원거래 확인 등등)
+		//원거래번호로 주문정보 불러오는 로직 추가(원거래 카드정보, 가맹점 정보 등)
+		
+		orderInfo.setCardType("C");
+		
+		log.info("cardCancelProc orderInfo : " + orderInfo.toString());
+		
+		//VAN사 취소요청
+		resInfo = payment.cardPaymentProc(orderInfo);
+
+		if("O".equals(resInfo.getStatus())) {
+			//결제성공
+			orderInfo.setStateCd("0021");
+			orderInfo.setResCode("0021");
+			orderInfo.setResMsg(resInfo.getMsg2());
+		}else {
+			//결제실패
+			orderInfo.setStateCd("0031");
+			orderInfo.setResCode("0031");
+			orderInfo.setResMsg(resInfo.getMsg2());
+		}
+		mv.setViewName("result");
+		
+		mv.addObject("orderInfo", orderInfo); 
+		mv.addObject("resInfo", resInfo); 
+		
+		return mv;
+	}
+	
+	@RequestMapping(value="/result") 
+	public ModelAndView result(OrderInfoModel orderInfo) throws Exception{
 		ModelAndView mv = new ModelAndView();
 		
-		log.info("resReturn orderInfo : " + orderInfo.toString());
+		log.info("result orderInfo : " + orderInfo.toString());
 		
 		mv.addObject("orderInfo", orderInfo); 
 		
