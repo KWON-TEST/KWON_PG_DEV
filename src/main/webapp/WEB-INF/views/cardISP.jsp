@@ -258,7 +258,6 @@
 		<input type="hidden" name="trDt" id="trDt" value="${orderInfo.trDt}">
 		<input type="hidden" name="stateCd" id="stateCd" value="${orderInfo.stateCd}">
 		<input type="hidden" name="cardNo" id="cardNo" value="${orderInfo.cardNo}">
-		//<input type="hidden" name="cardYm" id="cardYm" value="${orderInfo.cardYm}">
 		<input type="hidden" name="amt" id="amt" value="${orderInfo.amt}">
 		<input type="hidden" name="tax" id="tax" value="${orderInfo.tax}">
 		<input type="hidden" name="serviceFee" id="serviceFee" value="${orderInfo.serviceFee}">
