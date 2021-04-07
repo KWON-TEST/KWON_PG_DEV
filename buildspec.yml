@@ -14,6 +14,7 @@ phases:
 artifacts:
   files:
     - ./appspec.yml
+    - ./deploy-before.sh
     - ./deploy.sh
     - build/libs/*.war
   discard-paths: yes
