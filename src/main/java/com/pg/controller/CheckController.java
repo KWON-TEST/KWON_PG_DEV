@@ -19,9 +19,9 @@ public class CheckController {
 	public ModelAndView check() throws Exception{
 		ModelAndView mv = new ModelAndView();
 		
-		String check = checkService.check();
+		checkService.check();
 		
-		log.info("check1:" + check);
+		//log.info("check1:" + check);
 		
 		mv.addObject("status", "OK"); 
 		
